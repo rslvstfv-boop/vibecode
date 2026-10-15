@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>VIBECODE — кодим по вайбу</title>
+<meta name="color-scheme" content="dark">
+<style>
+:root{color-scheme:dark;--pitch:10px;--gap:2px;--rule:rgb(255 255 255/.25);--muted:rgb(255 255 255/.5);--bg:#0d0d0d;--fg:#fff;--ok:#fff;--px:-100vw;--py:-100vh;--lx:-100vw;--ly:-100vh}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:#000;color:var(--fg);font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);scroll-behavior:smooth}
+body{background:var(--bg);font-size:15px;line-height:1.4;overflow-x:clip}
+a{color:inherit;text-decoration:none}ul,ol{list-style:none}
+.bars{position:fixed;inset:0;pointer-events:none;z-index:1;background-image:repeating-linear-gradient(to right,#000 0 var(--gap),transparent var(--gap) var(--pitch)),repeating-linear-gradient(to bottom,#000 0 var(--gap),transparent var(--gap) var(--pitch))}
+main,footer,header{position:relative;z-index:3}
+header{position:fixed;top:env(safe-area-inset-top,0px);left:0;right:0;display:flex;justify-content:space-between;padding:1.2rem 1.5rem;z-index:10;mix-blend-mode:difference;text-transform:uppercase}
+header nav{display:flex;gap:1.5rem;flex-wrap:wrap}
+section{min-height:100vh;padding:6rem 1.5rem 3rem;display:flex;flex-direction:column;gap:1.5rem;justify-content:center;max-width:1200px;margin:auto}
+.hero h1{font-weight:400;font-size:clamp(3rem,14vw,11rem);letter-spacing:-.04em;line-height:.85;text-transform:uppercase}
+.disp{font-weight:400;font-size:clamp(2rem,6vw,3.6rem);line-height:.9;letter-spacing:-.02em;text-transform:uppercase}
+.muted{color:var(--muted)}.faint{color:rgb(255 255 255/.3)}
+.panel{background:var(--bg);background-image:repeating-linear-gradient(to right,#000 0 var(--gap),transparent var(--gap) var(--pitch)),repeating-linear-gradient(to bottom,#000 0 var(--gap),transparent var(--gap) var(--pitch))}
+.box{border:1px solid var(--rule);padding:1rem}
+.btn{display:inline-flex;align-items:center;gap:1rem;height:2.6rem;padding:0 1.1rem;border:1px solid #fff;background:none;color:#fff;font:inherit;cursor:pointer;text-transform:uppercase;width:max-content;transition:background .2s,color .2s}
+.btn:hover,.btn:focus-visible,.btn.on{background:#fff;color:#000;outline:none}
+.tabs{display:flex;gap:.5rem;flex-wrap:wrap}
+.split{display:grid;gap:1.5rem;grid-template-columns:1fr}
+@media(min-width:900px){.split{grid-template-columns:1fr 1fr}}
+textarea,input[type=text],select{width:100%;background:#000;border:1px solid var(--rule);color:#fff;font:inherit;padding:.8rem;border-radius:0}
+textarea{min-height:9rem;resize:vertical}
+textarea:focus,input:focus,select:focus{outline:1px solid #fff}
+label{display:grid;gap:.4rem;font-size:.8rem;color:var(--muted);text-transform:uppercase}
+.meter{height:8px;background:#000;border:1px solid var(--rule)}.meter i{display:block;height:100%;width:0;background:#fff;transition:width .35s}
+.chk li{display:flex;gap:.8rem;padding:.55rem 0;border-bottom:1px solid var(--rule);cursor:default}
+.chk li b{font-weight:400;width:1.2rem;flex:none}.chk li.ok{color:#fff}.chk li:not(.ok){color:var(--muted)}
+.chk small{display:block;color:var(--muted);font-size:.8rem}
+.cards{display:grid;gap:.75rem;grid-template-columns:1fr}@media(min-width:800px){.cards{grid-template-columns:repeat(2,1fr)}}
+.card{display:flex;flex-direction:column;gap:.8rem;justify-content:space-between}
+.card pre{white-space:pre-wrap;font:inherit;font-size:.85rem;color:var(--muted)}
+.tag{font-size:.75rem;border:1px solid var(--muted);padding:.1rem .5rem;width:max-content;color:var(--muted);text-transform:uppercase}
+.out{white-space:pre-wrap;min-height:14rem;background:#000;font-size:.85rem}
+.road li{display:flex;gap:1rem;padding:.9rem 1rem;border:1px solid var(--rule);margin-bottom:.5rem;cursor:pointer;align-items:flex-start}
+.road li:hover,.road li:focus-visible{border-color:#fff;outline:none}
+.road .bx{width:1.1rem;height:1.1rem;border:1px solid #fff;flex:none;margin-top:.15rem;display:grid;place-items:center;font-size:.8rem}
+.road li.done{color:var(--muted)}.road li.done h3{text-decoration:line-through}
+.road h3{font-weight:400;font-size:1rem}.road p{font-size:.85rem;color:var(--muted)}
+.row2{display:grid;gap:.8rem;grid-template-columns:1fr 1fr}
+.cb{display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;font-size:.85rem}
+.cb label{display:flex;flex-direction:row;align-items:center;gap:.4rem;color:#fff;text-transform:none}
+.cb input{accent-color:#fff}
+#toast{position:fixed;left:50%;bottom:calc(1.5rem + env(safe-area-inset-bottom,0px));transform:translate(-50%,200%);background:#fff;color:#000;padding:.6rem 1rem;z-index:50;transition:transform .25s}
+#toast.on{transform:translate(-50%,0)}
+footer{padding:2rem 1.5rem;border-top:1px solid var(--rule);display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;color:rgb(255 255 255/.35);font-size:.8rem}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.beam{position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(circle 190px at var(--px) var(--py),rgb(255 255 255/.09),transparent),radial-gradient(circle 230px at var(--lx) var(--ly),rgb(255 255 255/.04),transparent)}
+#cv{position:fixed;inset:0;width:100%;height:100%;z-index:2;pointer-events:none;opacity:0;transition:opacity 1s}#cv.on{opacity:1}
+.card{transition:transform .15s;will-change:transform}
+#pl{position:fixed;inset:0;z-index:100;display:grid;place-items:center;transition:opacity .5s;text-transform:uppercase}#pl.done{opacity:0;pointer-events:none}
+.pl{width:20rem;max-width:80vw;display:grid;gap:1rem;text-align:center}.tr{height:1px;background:var(--rule)}.tr i{display:block;height:1px;background:#fff;transform:scaleX(0);transform-origin:left}
+.cn{position:absolute;width:2.5rem;height:2.5rem;border:0 solid #fff;transition:.7s}.done .cn{transform:scale(1.5);opacity:0}
+.cn:nth-child(1){top:2.5rem;left:2.5rem;border-width:1px 0 0 1px}.cn:nth-child(2){top:2.5rem;right:2.5rem;border-width:1px 1px 0 0}.cn:nth-child(3){bottom:2.5rem;left:2.5rem;border-width:0 0 1px 1px}.cn:nth-child(4){bottom:2.5rem;right:2.5rem;border-width:0 1px 1px 0}
+@media(prefers-reduced-motion:reduce){*{transition-duration:.01ms!important;scroll-behavior:auto!important}}
+</style></head><body>
+<div id="pl" class="panel"><i class="cn"></i><i class="cn"></i><i class="cn"></i><i class="cn"></i><div class="pl"><b style="font-weight:400;font-size:1.6rem" data-s>VIBECODE</b><div class="tr"><i id="bar"></i></div><span id="num" class="muted">LOADING 000</span></div></div>
+<div class="beam"></div><div class="bars"></div><canvas id="cv" aria-label="Вращающаяся абстрактная фигура"></canvas>
+<header><a href="#top" data-s>VIBECODE</a><nav><a href="#score" data-s>Оценка</a><a href="#build" data-s>Конструктор</a><a href="#lib" data-s>Библиотека</a><a href="#road" data-s>Путь</a></nav></header>
+<main>
+<section class="hero" id="top"><p class="muted">Описываешь словами. ИИ пишет код. Ты ведёшь.</p>
+<h1 data-s>VIBECODE</h1>
+<p style="max-width:34rem">Четыре рабочих инструмента для тех, кто делает продукты через промпты: проверить запрос, собрать его, взять готовый, пройти путь.</p>
+<a class="btn" href="#score">Проверить промпт →</a></section>
+
+<section id="score"><h2 class="disp" data-s>Оценка промпта.</h2>
+<p class="muted">Вставьте промпт — получите оценку и подсказки, чего не хватает.</p>
+<div class="split"><div style="display:grid;gap:.8rem">
+<textarea id="sp" aria-label="Ваш промпт" placeholder="Например: Сделай на React страницу задач, тёмная тема, без библиотек, формат — один файл..."></textarea>
+<div class="meter"><i id="sm"></i></div><div id="sn" class="muted">0 / 100</div></div>
+<ul class="chk box" id="sc"></ul></div></section>
+
+<section id="build"><h2 class="disp" data-s>Конструктор.</h2>
+<p class="muted">Заполните поля — промпт собирается сам.</p>
+<div class="split"><div class="box" style="display:grid;gap:.8rem">
+<label>Что строим<input type="text" id="b1" placeholder="трекер привычек"></label>
+<div class="row2"><label>Стек<select id="b2"><option>HTML + JS</option><option>React</option><option>Next.js</option><option>Python + Flask</option><option>Node.js + Express</option></select></label>
+<label>Вайб<select id="b3"><option>тёмный, минималистичный</option><option>светлый, мягкий</option><option>неоновый киберпанк</option><option>брутализм</option></select></label></div>
+<label>Что нельзя<input type="text" id="b4" placeholder="без внешних библиотек"></label>
+<div class="cb"><label><input type="checkbox" class="bo" checked>адаптивность</label><label><input type="checkbox" class="bo" checked>доступность</label><label><input type="checkbox" class="bo">тесты</label><label><input type="checkbox" class="bo">комментарии</label></div></div>
+<div style="display:grid;gap:.8rem"><div class="box out" id="bo" aria-live="polite"></div><button class="btn" id="bc">Копировать</button></div></div></section>
+
+<section id="lib"><h2 class="disp" data-s>Библиотека.</h2>
+<div class="tabs" id="lt"></div><ul class="cards" id="lc"></ul></section>
+
+<section id="road"><h2 class="disp" data-s>Путь.</h2>
+<p class="muted">Отмечайте шаги — прогресс сохраняется в браузере.</p>
+<div class="meter"><i id="rm"></i></div><div id="rn" class="muted"></div>
+<ol class="road" id="rl"></ol><button class="btn" id="rr">Сбросить</button></section>
+</main>
+<footer><span>© 2026 VIBECODE</span><span>Промпт — это спецификация.</span></footer>
+<div id="toast" role="status"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const toast=m=>{const t=$("#toast");t.textContent=m;t.classList.add("on");clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove("on"),1600)};
+const copy=txt=>{const done=()=>toast("Скопировано");try{navigator.clipboard.writeText(txt).then(done,fb)}catch(e){fb()}function fb(){const a=document.createElement("textarea");a.value=txt;document.body.append(a);a.select();try{document.execCommand("copy");done()}catch(e){toast("Не удалось скопировать")}a.remove()}};
+/* 1. scorer */
+const C=[["Цель","Опишите, что именно нужно получить (от 40 символов).",t=>t.trim().length>=40],
+["Стек","Назовите язык или фреймворк: React, Python, HTML…",t=>/react|vue|next|python|flask|node|html|css|js|javascript|typescript|tailwind|rust|svelte/i.test(t)],
+["Ограничения","Скажите, чего делать не нужно: «без», «только», «не использовать».",t=>/(^|[^а-яё])(без|не)([^а-яё]|$)|только|must|only|without|no\s/i.test(t)],
+["Формат результата","Укажите, что вернуть: один файл, список шагов, diff.",t=>/формат|файл|список|шаг|diff|json|таблиц|format|file/i.test(t)],
+["Стиль и вайб","Опишите внешний вид или тон: тёмный, минимализм, дружелюбный.",t=>/тёмн|темн|светл|минимал|стиль|дизайн|неон|мягк|style|dark|light|design|minimal/i.test(t)]];
+function score(){const t=$("#sp").value;let n=0;$("#sc").innerHTML=C.map(c=>{const ok=c[2](t);if(ok)n++;return`<li class="${ok?"ok":""}"><b>${ok?"✓":"○"}</b><div>${c[0]}${ok?"":`<small>${c[1]}</small>`}</div></li>`}).join("");
+const p=n*20;$("#sm").style.width=p+"%";$("#sn").textContent=p+" / 100 — "+(p>=80?"отличный промпт":p>=40?"можно усилить":"слишком расплывчато")}
+$("#sp").addEventListener("input",score);score();
+/* 2. builder */
+function build(){const g=id=>$(id).value.trim(),o=$$(".bo:checked").map(x=>x.parentNode.textContent.trim());
+const idea=g("#b1")||"(опишите идею)";
+const s=`Ты — опытный разработчик. Помоги собрать проект.\n\nЦель: ${idea}.\nСтек: ${g("#b2")}.\nВизуальный вайб: ${g("#b3")}.\n`+(g("#b4")?`Ограничения: ${g("#b4")}.\n`:"")+(o.length?`Требования: ${o.join(", ")}.\n`:"")+`\nСначала кратко предложи план в 3–5 шагах и дождись моего «ок». Затем пиши код по шагам, объясняя ключевые решения одной фразой.`;
+$("#bo").textContent=s}
+$$("#build input,#build select").forEach(e=>e.addEventListener("input",build));build();
+$("#bc").onclick=()=>copy($("#bo").textContent);
+/* 3. library */
+const L=[["UI","Страница по описанию","Сделай одностраничный сайт для [идея]. Тёмная тема, крупная типографика, адаптивная вёрстка, один HTML-файл без внешних зависимостей."],
+["UI","Улучшить дизайн","Вот мой компонент: [код]. Улучши визуальную иерархию, отступы и контраст. Не меняй логику и названия props."],
+["BUG","Найти баг","Код ниже падает с ошибкой: [текст ошибки]. Сначала объясни причину простыми словами, затем покажи минимальное исправление."],
+["BUG","Воспроизвести проблему","Помоги написать минимальный пример, воспроизводящий баг: [описание]. Убери всё лишнее, оставь не больше 30 строк."],
+["REFACTOR","Упростить код","Упрости этот код, сохранив поведение: [код]. Покажи diff и коротко объясни каждое изменение."],
+["REFACTOR","Добавить тесты","Напиши тесты для функции [имя]: типовые случаи, граничные значения и ошибки. Используй [фреймворк]."],
+["API","Спроектировать API","Спроектируй REST API для [сервис]: список эндпоинтов, формат запросов и ответов, коды ошибок. Верни таблицей."],
+["API","Объяснить чужой код","Объясни, что делает этот код, по блокам: [код]. Для каждого блока — одна строка «что» и одна «зачем»."]];
+const tabs=["ВСЕ","UI","BUG","REFACTOR","API"];let cur="ВСЕ";
+function lib(){$("#lt").innerHTML=tabs.map(t=>`<button class="btn ${t===cur?"on":""}" data-t="${t}">${t}</button>`).join("");
+$("#lc").innerHTML=L.map((p,i)=>[p,i]).filter(([p])=>cur==="ВСЕ"||p[0]===cur).map(([p,i])=>`<li class="card box panel"><span class="tag">${p[0]}</span><h3 style="font-weight:400">${p[1]}</h3><pre>${p[2]}</pre><button class="btn" data-c="${i}">Копировать</button></li>`).join("");
+$$("#lt .btn").forEach(b=>b.onclick=()=>{cur=b.dataset.t;lib()});$$("#lc .btn").forEach(b=>b.onclick=()=>copy(L[b.dataset.c][2]))}
+lib();
+/* 4. roadmap */
+const R=[["Выберите идею","Одна мелкая задача на выходные: трекер, бот, лендинг."],["Напишите первый промпт","Используйте конструктор выше и дождитесь плана."],["Запустите результат","Откройте код локально или в браузере, проверьте руками."],["Исправьте первый баг","Покажите ИИ ошибку целиком, не пересказывайте."],["Сохраните версию","Создайте репозиторий и сделайте первый коммит."],["Прочитайте код","Попросите объяснить блоки, которые не поняли."],["Опубликуйте","Выложите проект и пришлите ссылку другу."]];
+let done=[];try{done=JSON.parse(localStorage.getItem("vc_road")||"[]")}catch(e){}
+function road(){$("#rl").innerHTML=R.map((r,i)=>`<li tabindex="0" role="checkbox" aria-checked="${done.includes(i)}" class="${done.includes(i)?"done":""}" data-i="${i}"><span class="bx">${done.includes(i)?"✓":""}</span><div><h3>${r[0]}</h3><p>${r[1]}</p></div></li>`).join("");
+const p=Math.round(done.length/R.length*100);$("#rm").style.width=p+"%";$("#rn").textContent=`${done.length} из ${R.length} шагов — ${p}%`;
+$$("#rl li").forEach(li=>{const t=()=>{const i=+li.dataset.i;done=done.includes(i)?done.filter(x=>x!==i):[...done,i];try{localStorage.setItem("vc_road",JSON.stringify(done))}catch(e){}road()};li.onclick=t;li.onkeydown=e=>{if(e.key===" "||e.key==="Enter"){e.preventDefault();t()}}})}
+$("#rr").onclick=()=>{done=[];try{localStorage.removeItem("vc_road")}catch(e){}road()};road();
+/* ticker */
+const red=matchMedia("(prefers-reduced-motion:reduce)").matches,coarse=matchMedia("(hover:none)").matches;
+const subs=new Set();let raf=0;const loop=t=>{subs.forEach(f=>f(t));raf=subs.size?requestAnimationFrame(loop):0};const tick=f=>{subs.add(f);if(!raf)raf=requestAnimationFrame(loop);return()=>subs.delete(f)};
+/* beam */
+if(!coarse&&!red){const r=document.documentElement.style;let tx=0,ty=0,x=0,y=0,lx=0,ly=0,s=0;addEventListener("pointermove",e=>{tx=e.clientX;ty=e.clientY;if(!s){s=1;x=lx=tx;y=ly=ty}});
+tick(()=>{if(!s)return;x+=(tx-x)*.12;y+=(ty-y)*.12;lx+=(tx-lx)*.045;ly+=(ty-ly)*.045;r.setProperty("--px",x+"px");r.setProperty("--py",y+"px");r.setProperty("--lx",lx+"px");r.setProperty("--ly",ly+"px")})}
+/* scramble */
+const POOL="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*<>";
+function setup(el){const txt=el.textContent.replace(/\s+/g," ").trim();const real=document.createElement("span");real.className="sr";real.textContent=txt;const v=document.createElement("span");v.setAttribute("aria-hidden","true");el.textContent="";el.append(real,v);v.textContent=red?txt:txt.replace(/\S/g,"\u00a0");el._v=v;el._t=txt;el._r=0;el.addEventListener("mouseenter",()=>run(el))}
+function run(el){if(red)return;const t=el._t,cps=Math.max(1,Math.ceil(t.length/22));let n=0,last=0;const id=++el._r;const st=tick(ts=>{if(id!==el._r){st();return}if(ts-last<40)return;last=ts;n+=cps;el._v.textContent=[...t].map((c,i)=>i<n||c===" "?c:POOL[Math.random()*POOL.length|0]).join("");if(n>=t.length){el._v.textContent=t;st()}})}
+const els=$$("[data-s]");els.forEach(setup);
+const reveal=el=>{const o=new IntersectionObserver(e=>{if(e[0].isIntersecting){o.disconnect();run(el)}},{rootMargin:"0px 0px -64px 0px"});o.observe(el)};
+/* card tilt */
+if(!coarse&&!red){const L=$("#lc");L.addEventListener("pointermove",e=>{const c=e.target.closest(".card");if(!c)return;const r=c.getBoundingClientRect(),nx=((e.clientX-r.left)/r.width)*2-1,ny=((e.clientY-r.top)/r.height)*2-1;c.style.transform=`perspective(60rem) rotateX(${-ny*6.5}deg) rotateY(${nx*6.5}deg)`});
+L.addEventListener("pointerout",e=>{const c=e.target.closest(".card");if(c)c.style.transform=""})}
+/* three */
+try{const cv=$("#cv"),R=new THREE.WebGLRenderer({canvas:cv,alpha:true,antialias:!coarse});R.setPixelRatio(Math.min(devicePixelRatio,1.5));
+const S=new THREE.Scene(),C=new THREE.PerspectiveCamera(30,1,.1,100);C.position.z=9;
+const k=new THREE.DirectionalLight(0x2f63ff,4);k.position.set(-3,2,3);const rm=new THREE.DirectionalLight(0xffd9c0,2.2);rm.position.set(3,.5,-2);S.add(k,rm,new THREE.AmbientLight(0xffffff,.15));
+const g=new THREE.TorusKnotGeometry(1.2,.38,220,32,2,3);
+const m=new THREE.Mesh(g,new THREE.MeshStandardMaterial({color:0x070a14,metalness:.85,roughness:.28}));
+const w=new THREE.Mesh(g,new THREE.MeshBasicMaterial({color:0xffffff,wireframe:true,transparent:true,opacity:.07}));
+const grp=new THREE.Group();grp.add(m,w);S.add(grp);
+let mx=0,my=0,ax=0,ay=0;addEventListener("pointermove",e=>{mx=e.clientX/innerWidth*2-1;my=e.clientY/innerHeight*2-1});
+const rs=()=>{R.setSize(innerWidth,innerHeight,false);C.aspect=innerWidth/innerHeight;C.updateProjectionMatrix()};rs();addEventListener("resize",rs);
+let sj=0;tick(t=>{if(document.hidden)return;const j=Math.min(1,scrollY/(innerHeight*1.2));sj+=(j-sj)*.08;ax+=(mx-ax)*.06;ay+=(my-ay)*.06;
+grp.rotation.y=t/9000+sj*2.4+ax*.4;grp.rotation.x=.3+sj*.8+ay*.25;grp.rotation.z=Math.sin(t/7000)*.1;
+const wide=innerWidth>innerHeight;grp.position.x=wide?-sj*3.2:0;grp.position.y=wide?-.3:1.1-sj*1.5;const s=(wide?1:.8)*(1+sj*.35);grp.scale.setScalar(s);R.render(S,C)});
+cv.classList.add("on")}catch(e){console.error(e)}
+/* preloader */
+{const pl=$("#pl"),bar=$("#bar"),num=$("#num"),t0=performance.now();let sh=0;const st=tick(t=>{const fin=t-t0>900&&document.readyState==="complete"||t-t0>4000;sh+=((fin?1:Math.min(.9,(t-t0)/1200))-sh)*.08;if(fin&&sh>.995)sh=1;bar.style.transform=`scaleX(${sh})`;num.textContent="LOADING "+String(Math.round(sh*100)).padStart(3,"0");
+if(sh>=1){st();pl.classList.add("done");els.forEach((e,i)=>{const hero=e.closest("header,.hero");hero?setTimeout(()=>run(e),60*i):reveal(e)});setTimeout(()=>pl.remove(),700)}})}
+</script></body></html>
